@@ -1,9 +1,6 @@
 # 🛡️ Autonomous Self-Healing Cyber Defense System
 
-![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-Active-blue)
-![Tech](https://img.shields.io/badge/AI-Cybersecurity-red)
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
 
 > 🚀 AI-powered cybersecurity system that detects, deceives, and autonomously defends against modern cyber attacks in real time.
 
