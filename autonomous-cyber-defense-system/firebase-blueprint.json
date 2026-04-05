@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "AttackLog": {
+      "title": "Attack Log",
+      "description": "Logs of detected security threats",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "sourceIp": { "type": "string" },
+        "targetPort": { "type": "number" },
+        "attackType": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "payload": { "type": "string" },
+        "actionTaken": { "type": "string" }
+      },
+      "required": ["timestamp", "sourceIp", "attackType", "severity"]
+    },
+    "Attacker": {
+      "title": "Attacker Profile",
+      "description": "Profiles of identified malicious actors",
+      "type": "object",
+      "properties": {
+        "ip": { "type": "string" },
+        "threatScore": { "type": "number" },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "attackCount": { "type": "number" },
+        "patterns": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["active", "blocked", "monitored"] }
+      },
+      "required": ["ip", "threatScore"]
+    },
+    "SystemStatus": {
+      "title": "System Health Status",
+      "description": "Real-time health metrics of the defense system",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "cpuUsage": { "type": "number" },
+        "memoryUsage": { "type": "number" },
+        "activeNodes": { "type": "number" },
+        "services": {
+          "type": "object",
+          "properties": {
+            "trafficMonitor": { "type": "string" },
+            "anomalyDetector": { "type": "string" },
+            "honeypot": { "type": "string" }
+          }
+        }
+      },
+      "required": ["timestamp", "cpuUsage", "memoryUsage"]
+    }
+  },
+  "firestore": {
+    "/attack_logs/{logId}": {
+      "schema": "AttackLog",
+      "description": "Collection of security attack logs"
+    },
+    "/attackers/{attackerId}": {
+      "schema": "Attacker",
+      "description": "Collection of attacker profiles"
+    },
+    "/system_status/{statusId}": {
+      "schema": "SystemStatus",
+      "description": "Collection of system health snapshots"
+    }
+  }
+}

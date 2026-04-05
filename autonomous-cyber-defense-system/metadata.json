@@ -1,0 +1,5 @@
+{
+  "name": "Autonomous Self-Healing Cyber Defense System",
+  "description": "A full-stack cybersecurity dashboard for real-time network monitoring, AI-based anomaly detection, self-healing service management, and deception-based defense (honeypots).",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: attack_logs
+    // Fields:
+    //   - timestamp: string (ISO 8601)
+    //   - sourceIp: string
+    //   - targetPort: number
+    //   - attackType: string
+    //   - severity: string (low, medium, high, critical)
+    //   - payload: string
+    //   - actionTaken: string
+    //
+    // Collection: attackers
+    // Fields:
+    //   - ip: string
+    //   - threatScore: number
+    //   - lastSeen: string (ISO 8601)
+    //   - attackCount: number
+    //   - patterns: list (strings)
+    //   - status: string (active, blocked, monitored)
+    //
+    // Collection: system_status
+    // Fields:
+    //   - timestamp: string (ISO 8601)
+    //   - cpuUsage: number
+    //   - memoryUsage: number
+    //   - activeNodes: number
+    //   - services: map (trafficMonitor, anomalyDetector, honeypot)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "janakdhami133@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidTimestamp(ts) {
+      return ts is string && ts.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    function isValidSeverity(sev) {
+      return sev in ['low', 'medium', 'high', 'critical'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Users collection for RBAC
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // Attack Logs: Admins can read/write, authenticated users can read
+    match /attack_logs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && 
+        request.resource.data.keys().hasAll(['timestamp', 'sourceIp', 'attackType', 'severity']) &&
+        isValidTimestamp(request.resource.data.timestamp) &&
+        isValidSeverity(request.resource.data.severity) &&
+        request.resource.data.sourceIp is string &&
+        request.resource.data.attackType is string;
+      allow update, delete: if isAdmin();
+    }
+
+    // Attackers: Admins can read/write, authenticated users can read
+    match /attackers/{attackerId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // System Status: Admins can read/write, authenticated users can read
+    match /system_status/{statusId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

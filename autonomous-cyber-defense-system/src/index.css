@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-200;
+  }
+}
+
+@layer components {
+  .cyber-card {
+    @apply bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden;
+  }
+  
+  .cyber-card::before {
+    content: "";
+    @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-50;
+  }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scan-line {
+  @apply absolute top-0 left-0 w-full h-20 bg-cyan-500/10 pointer-events-none;
+  animation: scan 4s linear infinite;
+}
