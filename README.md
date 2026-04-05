@@ -11,11 +11,12 @@
 
 ## 📸 Demo Preview
 
-![Demo](https://via.placeholder.com/800x400.png?text=Cyber+Defense+Dashboard)
+
 
 > ⚠️ Replace this with your actual project screenshot
+<img width="1886" height="766" alt="Screenshot 2026-04-05 141313" src="https://github.com/user-attachments/assets/01747505-fe2a-4303-a7f4-e08203069ce9" />
 
----
+
 
 ## 📌 Overview
 
